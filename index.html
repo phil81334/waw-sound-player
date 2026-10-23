@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WaW Sound Player</title>
+    <link rel="icon" href="/src-tauri/icons/icon.png" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <main id="app" hidden>
+      <div class="tab-bar"><span class="tab">Sounds</span><span id="version">WaW Sound Player | 0.2.0</span></div>
+      <section class="panel">
+        <div class="search-row">
+          <label for="search">Search</label>
+          <input id="search" type="search" placeholder="Find a sound by filename or folder…" spellcheck="false" autocomplete="off" />
+          <button id="clear-filters">Clear filters</button><button id="rescan">Rescan</button><button id="cache">Cache…</button>
+        </div>
+        <div class="filters">
+          <label for="folder">Folder</label><select id="folder"><option value="">All folders</option></select>
+          <label for="archive">IWD archive</label><select id="archive"><option value="">All archives</option></select>
+          <label class="layout-option"><input id="compact-layout" type="checkbox" /> Compact cards</label>
+          <span id="count">Reading sound catalogue…</span>
+        </div>
+        <div class="workspace">
+          <section id="catalogue" class="catalogue" aria-label="Sound catalogue">
+            <div class="list-heading"><span>Sound / folder</span><span>IWD source</span></div>
+            <div id="scroll" tabindex="0" aria-label="Scrollable sound list"><div id="list"></div><p id="empty">Reading IWD archives…</p></div>
+          </section>
+          <section class="player" aria-label="Selected sound">
+            <div class="selection-heading"><span class="eyebrow">SOUND PREVIEW</span><span id="playing-indicator">No sound selected</span></div>
+            <div class="sound-symbol" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 25h10l13-11v36L22 39H12z"/><path d="M43 24a12 12 0 0 1 0 16M49 17a22 22 0 0 1 0 30"/></svg></div>
+            <h1 id="filename">Select a sound</h1><p id="sound-path" class="hint">Browse the sounds stored in your game’s IWD archives.</p>
+            <div class="transport"><button id="play" class="primary" disabled>Play</button><button id="stop" disabled>Stop</button><button id="restart" disabled>Restart</button></div>
+            <div class="timeline"><input id="seek" type="range" min="0" max="1" step="0.01" value="0" aria-label="Playback position" disabled /><div><span id="elapsed">0:00.00</span><span id="duration">0:00.00</span></div></div>
+            <div class="volume-row"><button id="mute" aria-label="Mute" title="Mute">Mute</button><input id="volume" type="range" min="0" max="100" value="50" aria-label="Volume" /><span id="volume-value">50%</span></div>
+            <label class="repeat"><input id="repeat" type="checkbox" /> Repeat sound</label>
+            <div class="details">
+              <label for="source">IWD source</label><select id="source" disabled></select>
+              <dl><dt>Encoding</dt><dd id="encoding">—</dd><dt>Channels</dt><dd id="channels">—</dd><dt>Sample rate</dt><dd id="rate">—</dd><dt>File size</dt><dd id="size">—</dd></dl>
+              <button id="copy" disabled>Copy sound path</button>
+            </div>
+          </section>
+        </div>
+        <details id="information"><summary>Catalogue information</summary><p id="statistics" class="hint">No catalogue loaded.</p><pre id="warnings" hidden></pre></details>
+        <p id="message" role="status">Reading your game’s IWD archives…</p>
+      </section>
+    </main>
+    <footer id="footer" hidden><span id="status">Ready</span><div><span id="environment"></span><button id="about" class="icon-button" aria-label="About WaW Sound Player" title="About"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7.5" r="0.9" fill="currentColor" stroke="none"/></svg></button></div></footer>
+    <dialog id="about-dialog" aria-labelledby="about-title"><div class="dialog-title" id="about-title">About WaW Sound Player</div><div class="dialog-body">
+      <p>An unofficial tool made for the World at War modding community.</p><p>Browse and play sounds stored in the game’s main IWD archives. No Modtools or running game required.</p>
+      <p>Plays individual PCM, Microsoft ADPCM and xWMA clips through Windows XAudio2. Loose files, FastFiles, sound aliases, editing and exporting are not included. Game files are never changed.</p>
+      <p>Independent of Treyarch, Activision and UGX. Built with JavaScript, Vite, Rust, Tauri and a small native Windows audio bridge. Open source under GPL-3.0; see ATTRIBUTION.md.</p>
+      <p>Created by <strong>phil81334</strong>.</p><label for="repo-url">Source, instructions and releases</label><input id="repo-url" class="repo-url" value="https://github.com/phil81334/waw-sound-player" readonly />
+      <div class="dialog-actions"><button data-close="about-dialog">Close</button></div>
+    </div></dialog>
+    <dialog id="cache-dialog" aria-labelledby="cache-title"><div class="dialog-title" id="cache-title">Sound catalogue cache</div><div class="dialog-body">
+      <p>The catalogue is cached here. Audio is read from its IWD when selected; no extracted sound files are saved.</p><input id="cache-path" class="repo-url" readonly aria-label="Cache location" /><p id="cache-size" class="hint"></p><p class="hint">Clearing removes the saved catalogue. Your game files are unchanged.</p>
+      <div class="dialog-actions"><button id="clear-cache">Clear cache</button><button data-close="cache-dialog">Close</button></div>
+    </div></dialog>
+    <dialog id="startup-dialog" aria-labelledby="startup-title"><div class="dialog-title" id="startup-title">World at War folder required</div><div class="dialog-body"><p id="startup-message"></p><div class="dialog-actions"><button id="quit">Close</button></div></div></dialog>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
